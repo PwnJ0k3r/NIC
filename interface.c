@@ -406,6 +406,7 @@ status_t nic_receive_packet(nic_device_t *device, void *buffer, unsigned int buf
     return received_length;
 }
 
+// Define the NIC driver structure and implement the function to return a pointer to it
 nic_driver_t nic_driver = {
     .init = nic_init,
     .shutdown = nic_shutdown,
@@ -413,7 +414,7 @@ nic_driver_t nic_driver = {
     .receive_packet = nic_receive_packet,
     .ioctl = nic_ioctl
 };
-
+//Function to return a pointer to the NIC driver structure
 nic_driver_t * nic_get_driver() {
     return &nic_driver;
 }

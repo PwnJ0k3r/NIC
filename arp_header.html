@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabecera ARP y Comparación de Capas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h2 {
+            color: #11998e;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #11998e;
+            padding-bottom: 10px;
+        }
+        .comparison {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .layer-box {
+            border: 3px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            position: relative;
+        }
+        .layer-label {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #11998e;
+        }
+        .arp-special {
+            background: linear-gradient(to right, #fff3cd, #d4edda);
+            border-color: #ff6b6b;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+        }
+        .legend {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .legend-item {
+            margin: 5px 0;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Protocolo ARP</h1>
+        
+        <!-- Comparación de encapsulación -->
+        <div class="comparison">
+            <h2>Encapsulación: ARP vs IP</h2>
+            
+            <div class="layer-box">
+                <div class="layer-label">Tráfico IP Normal</div>
+                <div style="margin-top: 10px;">
+                    <div style="background: #B4E5FF; padding: 10px; margin: 5px 0; border: 2px solid #333; text-align: center;">
+                        <strong>Ethernet Header</strong> (EtherType: 0x0800)
+                    </div>
+                    <div style="background: #D4B4FF; padding: 10px; margin: 5px 0; border: 2px solid #333; text-align: center;">
+                        <strong>IP Header</strong>
+                    </div>
+                    <div style="background: #B4FFB4; padding: 10px; margin: 5px 0; border: 2px solid #333; text-align: center;">
+                        <strong>TCP/UDP + Datos</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layer-box arp-special">
+                <div class="layer-label">Tráfico ARP ⚡</div>
+                <div style="margin-top: 10px;">
+                    <div style="background: #B4E5FF; padding: 10px; margin: 5px 0; border: 2px solid #333; text-align: center;">
+                        <strong>Ethernet Header</strong> (EtherType: 0x0806)
+                    </div>
+                    <div style="background: #FFE5B4; padding: 10px; margin: 5px 0; border: 2px solid #ff6b6b; border-width: 3px; text-align: center;">
+                        <strong>ARP Packet</strong> (¡Sin IP Header!)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                <strong>⚠️ Nota importante:</strong> ARP va directamente en Ethernet, sin pasar por IP. Por eso se dice que está "entre" las capas 2 y 3.
+            </div>
+        </div>
+        
+        <!-- Cabecera ARP -->
+        <div class="header-diagram">
+            <h2>Cabecera ARP (28 bytes)</h2>
+            <svg viewBox="0 0 800 450">
+                <!-- Fila 1 -->
+                <rect x="10" y="20" width="390" height="50" fill="#FFE5B4" stroke="#333" stroke-width="2"/>
+                <text x="205" y="41" text-anchor="middle" font-size="13" font-weight="bold">Tipo de Hardware (HTYPE)</text>
+                <text x="205" y="58" text-anchor="middle" font-size="11">16 bits - 1 = Ethernet</text>
+                
+                <rect x="400" y="20" width="390" height="50" fill="#FFD4B4" stroke="#333" stroke-width="2"/>
+                <text x="595" y="41" text-anchor="middle" font-size="13" font-weight="bold">Tipo de Protocolo (PTYPE)</text>
+                <text x="595" y="58" text-anchor="middle" font-size="11">16 bits - 0x0800 = IPv4</text>
+                
+                <!-- Fila 2 -->
+                <rect x="10" y="75" width="195" height="50" fill="#B4E5FF" stroke="#333" stroke-width="2"/>
+                <text x="107" y="96" text-anchor="middle" font-size="13" font-weight="bold">HLEN</text>
+                <text x="107" y="113" text-anchor="middle" font-size="11">8 bits = 6</text>
+                
+                <rect x="205" y="75" width="195" height="50" fill="#B4D4FF" stroke="#333" stroke-width="2"/>
+                <text x="302" y="96" text-anchor="middle" font-size="13" font-weight="bold">PLEN</text>
+                <text x="302" y="113" text-anchor="middle" font-size="11">8 bits = 4</text>
+                
+                <rect x="400" y="75" width="390" height="50" fill="#D4B4FF" stroke="#333" stroke-width="2"/>
+                <text x="595" y="96" text-anchor="middle" font-size="13" font-weight="bold">Operación (OPER)</text>
+                <text x="595" y="113" text-anchor="middle" font-size="11">16 bits - 1=Request, 2=Reply</text>
+                
+                <!-- Fila 3 -->
+                <rect x="10" y="130" width="780" height="50" fill="#B4FFE5" stroke="#333" stroke-width="2"/>
+                <text x="400" y="151" text-anchor="middle" font-size="13" font-weight="bold">Dirección MAC Origen (SHA - Sender Hardware Address)</text>
+                <text x="400" y="168" text-anchor="middle" font-size="11">48 bits (6 bytes) - Ej: AA:BB:CC:DD:EE:FF</text>
+                
+                <!-- Fila 4 -->
+                <rect x="10" y="185" width="780" height="50" fill="#B4E5D4" stroke="#333" stroke-width="2"/>
+                <text x="400" y="206" text-anchor="middle" font-size="13" font-weight="bold">Dirección IP Origen (SPA - Sender Protocol Address)</text>
+                <text x="400" y="223" text-anchor="middle" font-size="11">32 bits (4 bytes) - Ej: 192.168.1.100</text>
+                
+                <!-- Fila 5 -->
+                <rect x="10" y="240" width="780" height="50" fill="#FFB4E5" stroke="#333" stroke-width="2"/>
+                <text x="400" y="261" text-anchor="middle" font-size="13" font-weight="bold">Dirección MAC Destino (THA - Target Hardware Address)</text>
+                <text x="400" y="278" text-anchor="middle" font-size="11">48 bits (6 bytes) - 00:00:00:00:00:00 en Request</text>
+                
+                <!-- Fila 6 -->
+                <rect x="10" y="295" width="780" height="50" fill="#FFD4E5" stroke="#333" stroke-width="2"/>
+                <text x="400" y="316" text-anchor="middle" font-size="13" font-weight="bold">Dirección IP Destino (TPA - Target Protocol Address)</text>
+                <text x="400" y="333" text-anchor="middle" font-size="11">32 bits (4 bytes) - IP que queremos resolver</text>
+                
+                <!-- Indicadores de bits -->
+                <text x="205" y="15" text-anchor="middle" font-size="9" fill="#666">0-15 bits</text>
+                <text x="595" y="15" text-anchor="middle" font-size="9" fill="#666">16-31 bits</text>
+            </svg>
+            
+            <div class="legend">
+                <div class="legend-item"><strong>Tamaño total:</strong> 28 bytes (para Ethernet + IPv4)</div>
+                <div class="legend-item"><strong>HLEN:</strong> Hardware address Length = 6 bytes (MAC)</div>
+                <div class="legend-item"><strong>PLEN:</strong> Protocol address Length = 4 bytes (IPv4)</div>
+            </div>
+        </div>
+        
+        <!-- Ejemplo práctico -->
+        <div class="header-diagram">
+            <h2>Ejemplo: Funcionamiento de ARP</h2>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                <h3 style="color: #11998e; margin-top: 0;">Escenario:</h3>
+                <p>El PC con IP <strong>192.168.1.100</strong> (MAC: AA:BB:CC:DD:EE:FF) quiere comunicarse con <strong>192.168.1.1</strong> pero no conoce su MAC.</p>
+                
+                <h3 style="color: #11998e;">1️⃣ ARP Request (Broadcast):</h3>
+                <div style="background: white; padding: 15px; border-left: 4px solid #ffc107; margin: 10px 0;">
+                    <strong>Ethernet:</strong><br>
+                    - MAC Destino: <code>FF:FF:FF:FF:FF:FF</code> (broadcast)<br>
+                    - MAC Origen: <code>AA:BB:CC:DD:EE:FF</code><br>
+                    - EtherType: <code>0x0806</code> (ARP)<br><br>
+                    
+                    <strong>ARP:</strong><br>
+                    - Operación: <code>1</code> (Request)<br>
+                    - MAC Origen: <code>AA:BB:CC:DD:EE:FF</code><br>
+                    - IP Origen: <code>192.168.1.100</code><br>
+                    - MAC Destino: <code>00:00:00:00:00:00</code> (desconocida)<br>
+                    - IP Destino: <code>192.168.1.1</code> (la que buscamos)
+                </div>
+                
+                <h3 style="color: #11998e;">2️⃣ ARP Reply (Unicast):</h3>
+                <div style="background: white; padding: 15px; border-left: 4px solid #28a745; margin: 10px 0;">
+                    <strong>Ethernet:</strong><br>
+                    - MAC Destino: <code>AA:BB:CC:DD:EE:FF</code> (unicast al solicitante)<br>
+                    - MAC Origen: <code>11:22:33:44:55:66</code><br>
+                    - EtherType: <code>0x0806</code> (ARP)<br><br>
+                    
+                    <strong>ARP:</strong><br>
+                    - Operación: <code>2</code> (Reply)<br>
+                    - MAC Origen: <code>11:22:33:44:55:66</code> ✅<br>
+                    - IP Origen: <code>192.168.1.1</code><br>
+                    - MAC Destino: <code>AA:BB:CC:DD:EE:FF</code><br>
+                    - IP Destino: <code>192.168.1.100</code>
+                </div>
+                
+                <div class="note">
+                    <strong>💡 Resultado:</strong> Ahora el PC sabe que <code>192.168.1.1</code> tiene la MAC <code>11:22:33:44:55:66</code> y guarda esta información en su tabla ARP (caché).
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
